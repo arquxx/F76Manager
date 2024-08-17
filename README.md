@@ -1,8 +1,21 @@
-> **Note**  
-> **This project is currently unmaintained.**
-> 
-> If anyone is interested in continuing development, feel free to fork it.
-> I'll also try to merge pull requests, whenever I have the time.
+> **F76Manager**
+> **WORK IN PROGRESS**
+>
+> **GOAL:**
+> **REDEFINE FALLOUT76 MODDING/CONFIGURATION EXPERIENCE**
+>
+> **PRIORITY:**
+> **EXTREME**
+
+> Below is the original description, directly forked from well-known Fallout76 QuickConfiguration & ModManager tool.
+> Credits for the code I'm working with go to the author. Thank you for your hard work!
+
+> ------------------------------------------------------------------------------------------------------------
+
+>Note
+>This project is currently unmaintained.
+>If anyone is interested in continuing development, feel free to fork it.
+>I'll also try to merge pull requests, whenever I have the time.
 
 ---
 

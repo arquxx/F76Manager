@@ -14,7 +14,6 @@ namespace Fo76ini
 {
     public static class IniFiles
     {
-        public static IniFile F76;
         public static IniFile F76Prefs;
         public static IniFile F76Custom;
         public static IniFile Config;
@@ -31,7 +30,7 @@ namespace Fo76ini
         public static string ParentPath;
 
         /// <summary>
-        /// "%LOCALAPPDATA%\Fallout 76 Quick Configuration\config.ini"
+        /// "%LOCALAPPDATA%\F76Manager\_F76Manager_config.ini"
         /// </summary>
         public static readonly string ConfigPath;
 
@@ -41,12 +40,12 @@ namespace Fo76ini
         public static readonly string DefaultsPath;
 
         /// <summary>
-        /// "...\DefaultINI\Fallout76.ini"
+        /// "...\DefaultINI\Fallout76Custom.ini"
         /// </summary>
-        public static readonly string DefaultF76Path;
+        public static readonly string DefaultF76CustomPath;
 
         /// <summary>
-        /// "...\DefaultINI\Medium.ini"
+        /// "...\DefaultINI\Fallout76Prefs.ini"
         /// </summary>
         public static readonly string DefaultF76PrefsPath;
 
@@ -60,11 +59,11 @@ namespace Fo76ini
 
             ParentPath = DefaultParentPath;
 
-            ConfigPath = Path.Combine(Shared.AppConfigFolder, "config.ini");
+            ConfigPath = Path.Combine(Shared.AppConfigFolder, "_F76Manager_config.ini");
 
             DefaultsPath = Path.Combine(Shared.AppInstallationFolder, "DefaultINI");
-            DefaultF76Path = Path.Combine(DefaultsPath, "Fallout76.ini");
-            DefaultF76PrefsPath = Path.Combine(DefaultsPath, "Medium.ini");
+            DefaultF76CustomPath = Path.Combine(DefaultsPath, "Fallout76Custom.ini");
+            DefaultF76PrefsPath = Path.Combine(DefaultsPath, "Fallout76Prefs.ini");
         }
 
         /// <summary>
@@ -86,19 +85,15 @@ namespace Fo76ini
             ParentPath = game.IniParentPath;
             Directory.CreateDirectory(ParentPath);
 
-            F76 = new IniFile(
-                Path.Combine(ParentPath, $"{game.IniPrefix}.ini"),
-                DefaultF76Path
-            );
             F76Prefs = new IniFile(
                 Path.Combine(ParentPath, $"{game.IniPrefix}Prefs.ini"),
                 DefaultF76PrefsPath
             );
             F76Custom = new IniFile(
-                Path.Combine(ParentPath, $"{game.IniPrefix}Custom.ini")
-           );
+                Path.Combine(ParentPath, $"{game.IniPrefix}Custom.ini"),
+                DefaultF76CustomPath
+            );
 
-            F76.Load();
             F76Prefs.Load();
             F76Custom.Load();
 
@@ -112,17 +107,14 @@ namespace Fo76ini
         public static bool IsLoaded()
         {
             return
-                F76 != null &&
                 F76Prefs != null &&
                 F76Custom != null &&
-                F76.IsLoaded() &&
                 F76Prefs.IsLoaded() &&
                 F76Custom.IsLoaded();
         }
 
         public static void SetINIsReadOnly(bool readOnly)
         {
-            F76.IsReadOnly = readOnly;
             F76Prefs.IsReadOnly = readOnly;
             F76Custom.IsReadOnly = readOnly;
         }
@@ -149,7 +141,7 @@ namespace Fo76ini
 
         public static bool AreINIsReadOnly()
         {
-            return F76.IsReadOnly && F76Prefs.IsReadOnly;
+            return F76Custom.IsReadOnly && F76Prefs.IsReadOnly;
         }
 
         /// <summary>
@@ -159,7 +151,6 @@ namespace Fo76ini
         {
             if (Configuration.MakeBackups)
                 Backup();
-            F76.Save();
             F76Prefs.Save();
             F76Custom.Save();
             Config.Save();
@@ -170,10 +161,8 @@ namespace Fo76ini
         /// </summary>
         public static void Backup()
         {
-            string backupDir = Path.Combine(ParentPath, "Backups", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+            string backupDir = Path.Combine(ParentPath, "_INI_backups", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
             Directory.CreateDirectory(backupDir);
-            if (File.Exists(F76.FilePath))
-                File.Copy(F76.FilePath, Path.Combine(backupDir, F76.FileName), true);
             if (File.Exists(F76Prefs.FilePath))
                 File.Copy(F76Prefs.FilePath, Path.Combine(backupDir, F76Prefs.FileName), true);
             if (File.Exists(F76Custom.FilePath))
@@ -186,12 +175,11 @@ namespace Fo76ini
         /// <returns></returns>
         public static bool FilesHaveBeenModified()
         {
-            return F76.FileHasBeenModified() || F76Prefs.FileHasBeenModified() || F76Custom.FileHasBeenModified();
+            return F76Prefs.FileHasBeenModified() || F76Custom.FileHasBeenModified();
         }
 
         public static void UpdateLastModifiedDates()
         {
-            F76.UpdateLastModifiedDate();
             F76Prefs.UpdateLastModifiedDate();
             F76Custom.UpdateLastModifiedDate();
         }
@@ -211,7 +199,7 @@ namespace Fo76ini
         /// <returns>true if found, false if it doesn't exist</returns>
         public static bool Exists(string section, string key)
         {
-            foreach (IniFile ini in new IniFile[] { F76, F76Prefs, F76Custom })
+            foreach (IniFile ini in new IniFile[] { F76Prefs, F76Custom })
                 if (ini.Exists(section, key))
                     return true;
             return false;
@@ -220,7 +208,7 @@ namespace Fo76ini
         public static string GetString(string section, string key, string defaultValue)
         {
             string value = defaultValue;
-            foreach (IniFile ini in new IniFile[] { F76, F76Prefs, F76Custom })
+            foreach (IniFile ini in new IniFile[] { F76Prefs, F76Custom })
                 if (ini.Exists(section, key))
                     value = ini.GetString(section, key);
             return value;
@@ -323,7 +311,7 @@ namespace Fo76ini
         /// <param name="key"></param>
         public static void RemoveAll(string section, string key)
         {
-            foreach (IniFile ini in new IniFile[] { F76, F76Prefs, F76Custom })
+            foreach (IniFile ini in new IniFile[] { F76Prefs, F76Custom })
                 ini.Remove(section, key);
         }
 
@@ -371,7 +359,6 @@ namespace Fo76ini
 
             MergeLists(F76Custom, "Archive", "sResourceIndexFileList");
             MergeLists(F76Custom, "Archive", "sResourceArchive2List");
-            MergeLists(F76Custom, "Archive", "sResourceDataDirsFinal");
         }
 
         /*

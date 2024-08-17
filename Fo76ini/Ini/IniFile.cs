@@ -328,43 +328,99 @@ namespace Fo76ini
 
         public void Set(string section, string key, string value)
         {
-            data[section][key] = value;
+            try
+            {
+                data[section][key] = value;
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't assign the key [{section}] {key} to {value}.");
+            }
         }
 
         public void Set(string section, string key, int value)
         {
-            Set(section, key, Utils.ToString(value));
+            try
+            {
+                Set(section, key, Utils.ToString(value));
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't set the key [{section}] {key} to {Utils.ToString(value)}.");
+            }
         }
 
         public void Set(string section, string key, uint value)
         {
-            Set(section, key, Utils.ToString(value));
+            try
+            {
+                Set(section, key, Utils.ToString(value));
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't set the key [{section}] {key} to {Utils.ToString(value)}.");
+            }
         }
 
         public void Set(string section, string key, long value)
         {
-            Set(section, key, Utils.ToString(value));
+            try
+            {
+                Set(section, key, Utils.ToString(value));
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't set the key [{section}] {key} to {Utils.ToString(value)}.");
+            }
         }
 
         public void Set(string section, string key, float value)
         {
-            Set(section, key, Utils.ToString(value));
+            try
+            {
+                Set(section, key, Utils.ToString(value));
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't set the key [{section}] {key} to {Utils.ToString(value)}.");
+            }
         }
 
         public void Set(string section, string key, double value)
         {
-            Set(section, key, Utils.ToString(value));
+            try
+            {
+                Set(section, key, Utils.ToString(value));
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't set the key [{section}] {key} to {Utils.ToString(value)}.");
+            }
         }
 
         public void Set(string section, string key, bool value)
         {
-            Set(section, key, value ? "1" : "0");
+            try
+            {
+                Set(section, key, value ? "1" : "0");
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't set the key [{section}] {key} to {Utils.ToString(value)}.");
+            }
         }
 
         public void Remove(string section, string key)
         {
-            if (Exists(section, key))
-                data[section].RemoveKey(key);
+            try
+            {
+                if (Exists(section, key))
+                    data[section].RemoveKey(key);
+            }
+            catch
+            {
+                throw new KeyNotFoundException($"Couldn't find [{section}] {key} in INI file.");
+            }
         }
     }
 }

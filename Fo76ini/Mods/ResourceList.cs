@@ -70,7 +70,7 @@ namespace Fo76ini.Mods
         }
 
         /// <summary>
-        /// Reads the Mods\resources.txt file and loads it's contents.
+        /// Reads the INI file and loads it's contents.
         /// </summary>
         /// <returns></returns>
         public static ResourceList FromINI(String listName)
